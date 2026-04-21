@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Лабораторна 2 • MVC + Builder + Facade</p>
+          <h1>Сторінка продажу велосипедів</h1>
+          <p class="lead">
+            Користувач реєструється, система перевіряє дані, зберігає їх у MongoDB,
+            надсилає підтвердження та дозволяє замовити звичайний або електровелосипед.
+          </p>
+        </div>
+      </section>
+
+      <% if (errors.length) { %>
+        <section class="message error">
+          <% errors.forEach(error => { %>
+            <p><%= error %></p>
+          <% }) %>
+        </section>
+      <% } %>
+
+      <% if (successMessage) { %>
+        <section class="message success"><p><%= successMessage %></p></section>
+      <% } %>
+
+      <% if (orderMessage) { %>
+        <section class="message success"><p><%= orderMessage %></p></section>
+      <% } %>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Реєстрація клієнта</h2>
+          <form method="post" action="/register" class="form">
+            <label>
+              ПІБ
+              <input type="text" name="fullName" value="<%= formData.fullName || '' %>" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" value="<%= formData.email || '' %>" />
+            </label>
+            <label>
+              Телефон
+              <input type="text" name="phone" value="<%= formData.phone || '' %>" />
+            </label>
+            <label>
+              Пароль
+              <input type="password" name="password" value="" />
+            </label>
+            <button type="submit">Зареєструватися</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Оформлення замовлення</h2>
+          <form method="post" action="/orders" class="form">
+            <label>
+              Ім'я клієнта
+              <input type="text" name="customerName" value="<%= orderFormData.customerName || '' %>" />
+            </label>
+            <label>
+              Email зареєстрованого користувача
+              <input type="email" name="email" value="<%= orderFormData.email || '' %>" />
+            </label>
+            <label>
+              Телефон
+              <input type="text" name="phone" value="<%= orderFormData.phone || '' %>" />
+            </label>
+            <label>
+              Оберіть велосипед
+              <select name="productId">
+                <option value="">-- виберіть модель --</option>
+                <% products.forEach(product => { %>
+                  <option value="<%= product.id %>" <%= orderFormData.productId === product.id ? 'selected' : '' %>>
+                    <%= product.brand %> <%= product.model %> - <%= product.type === 'electric' ? 'Електровелосипед' : 'Звичайний велосипед' %>
+                  </option>
+                <% }) %>
+              </select>
+            </label>
+            <button type="submit">Замовити велосипед</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="catalog">
+        <div class="section-title">
+          <h2>Каталог велосипедів</h2>
+          <p>
+            Замовлення для звичайного велосипеда та електровелосипеда створюються одним і тим самим методом Director.
+          </p>
+        </div>
+        <div class="catalog-grid">
+          <% products.forEach(product => { %>
+            <article class="product-card">
+              <span class="badge <%= product.type %>">
+                <%= product.type === "electric" ? "E-bike" : "Classic" %>
+              </span>
+              <h3><%= product.brand %> <%= product.model %></h3>
+              <p>Колір: <%= product.color %></p>
+              <p>Рама: <%= product.frameMaterial %></p>
+              <p>Колеса: <%= product.wheelSize %>"</p>
+              <% if (product.type === "electric") { %>
+                <p>Мотор: <%= product.motorPower %> W</p>
+                <p>Батарея: <%= product.batteryCapacity %> Wh</p>
+              <% } %>
+              <strong><%= product.price.toLocaleString("uk-UA") %> грн</strong>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="grid bottom-grid">
+        <article class="card">
+          <h2>Останні реєстрації</h2>
+          <ul class="list">
+            <% registrations.forEach(user => { %>
+              <li><strong><%= user.fullName %></strong> — <%= user.email %></li>
+            <% }) %>
+            <% if (!registrations.length) { %>
+              <li>Ще немає зареєстрованих користувачів.</li>
+            <% } %>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Останні замовлення</h2>
+          <ul class="list">
+            <% orders.forEach(order => { %>
+              <li><strong><%= order.customerName %></strong> — <%= order.brand %> <%= order.model %></li>
+            <% }) %>
+            <% if (!orders.length) { %>
+              <li>Ще немає оформлених замовлень.</li>
+            <% } %>
+          </ul>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

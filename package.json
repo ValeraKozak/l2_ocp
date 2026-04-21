@@ -1,0 +1,17 @@
+{
+  "name": "lab2-bicycle-store",
+  "version": "1.0.0",
+  "description": "Laboratory work 2: MVC web app with Builder and Facade patterns",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.5.0",
+    "nodemailer": "^8.0.5",
+    "nodemon": "^3.1.14"
+  }
+}
